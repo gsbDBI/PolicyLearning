@@ -9,7 +9,7 @@ with open(join(here, 'README.md')) as f:
 with open(join(here, 'LICENSE')) as f:
     lic = f.read()
 
-setup(name='PolicyLearning',
+setup(name='policy_learning',
       version='0.1',
       description='Offline policy learning in contextual bandits',
       author='Ruohan Zhan',
