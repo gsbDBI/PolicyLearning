@@ -19,7 +19,7 @@ To reproduce results on classification datasets shown in the paper, do
 
 
 ## Quick start for running simulations using synthetic data
-Load packages
+### 0. Load packages
 ```python
 from utils.saving import *
 from utils.policy_tree import fit_policytree, predict_policytree
