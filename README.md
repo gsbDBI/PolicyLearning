@@ -1,6 +1,6 @@
-<h1 align="center">Offline policy Learning in Contextual Bandits</h1>
+<h1 align="center">Policy Learning with Adaptively Collected Data</h1>
 
-Models for paper _Policy Learning with Adaptively Collected Data_.
+Models for paper _Policy Learning with Adaptively Collected Data_. 
 
 <p align="center">
   Table of contents </br>
