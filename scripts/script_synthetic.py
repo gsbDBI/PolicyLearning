@@ -90,8 +90,6 @@ if __name__ == '__main__':
     p = 3
     T = args.T
     recorded_T = [2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
-    for i in range(T):
-        mask[i, i:] = 1
     batch_size = 100
     time_explore = 50 * K
     batch_sizes = [time_explore] + [batch_size] * \
