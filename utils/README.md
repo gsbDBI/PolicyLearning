@@ -1,6 +1,6 @@
 This directory contains the Python module of policy learning using generalized AIPW estimator described in the paper _Policy Learning with Adaptively Collected Data_.
 
-To reproduce results presented in the paper, please go to directory [../scripts](https://github.com/gsbDBI/contextual_bandits_evaluation/tree/main/experiments) and follow the instructions in the README there. 
+To reproduce results presented in the paper, please go to directory [../scripts](https://github.com/gsbDBI/PolicyLearning/tree/main/scripts) and follow the instructions in the README there. 
 
 ## File description
 - `bayesian.py`: function to do bayesion update.
