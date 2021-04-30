@@ -33,11 +33,6 @@ parser.add_argument(
     default=1.0,
     help='signal strength')
 parser.add_argument(
-    '--split',
-    type=float,
-    default=0.5,
-    help='split')
-parser.add_argument(
     '--noise_std',
     type=float,
     default=1.0,
@@ -95,8 +90,6 @@ if __name__ == '__main__':
     p = 3
     T = args.T
     recorded_T = [2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
-    recorded_T = [T]
-    mask = np.zeros((T, T))
     for i in range(T):
         mask[i, i:] = 1
     batch_size = 100
