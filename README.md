@@ -41,6 +41,6 @@ source activate policy_learning
 cd ./experiments/
 python script_synthetic.py -s 1 -n test
 ```
-Results will be saved in ./experiments/results/
+Results will be saved in ./scripts/results/
 
 
