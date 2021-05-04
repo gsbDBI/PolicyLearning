@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, "/home/rhzhan/PolicyLearning/")
 from utils.saving import *
 import matplotlib.pyplot as plt
 from utils.policy_tree import fit_policytree, predict_policytree
@@ -11,7 +13,6 @@ import os
 from random import choice
 import argparse
 from itertools import product
-import sys
 from utils.ridge import *
 
 
@@ -142,7 +143,7 @@ if __name__ == '__main__':
                 return policy_value, w_test
 
             policy_value_uniform, arm_uniform = learn_policy('uniform')
-            beta_rate = [0.5, 1.0, 1.5, 2.0]
+            beta_rate = [0.5, 1.0, 2.0]
             policy_regret_beta = []
             policy_value = args.B ** 2 / 3 - 1 + 4 / (3 * args.B)
             for b_rate in beta_rate:
