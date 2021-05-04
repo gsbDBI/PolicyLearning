@@ -50,12 +50,6 @@ parser.add_argument(
     default='TSModel',
     help='bandit model')
 parser.add_argument(
-    '-m',
-    '--muhat',
-    type=str,
-    default='lfo',
-    help='muhat model, lfo or lco')
-parser.add_argument(
     '-s',
     '--sims',
     type=int,
