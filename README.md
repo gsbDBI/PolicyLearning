@@ -27,7 +27,7 @@ We organize the code into two directories:
 # Development setup
 R and Python are required. We recommend creating the following conda environment for computation.
 ```bash
-conda create --name PolicyLearning python=3.7
+conda create --name policy_learning python=3.7
 conda activate policy_learning
 source install.sh
 ```
@@ -41,6 +41,6 @@ source activate policy_learning
 cd ./experiments/
 python script_synthetic.py -s 1 -n test
 ```
-Results will be saved in ./experiments/results/
+Results will be saved in ./scripts/results/
 
 
