@@ -38,7 +38,7 @@ source install.sh
 - For a quick start on one simulation using synthetic data of sample size 1000 , use
 ```bash
 source activate policy_learning
-cd ./experiments/
+cd ./scripts/
 python script_synthetic.py -s 1 -n test
 ```
 Results will be saved in ./scripts/results/
