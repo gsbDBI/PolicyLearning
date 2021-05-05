@@ -1,5 +1,4 @@
 import sys
-sys.path.insert(0, "/home/rhzhan/PolicyLearning/")
 from utils.saving import *
 import matplotlib.pyplot as plt
 from utils.policy_tree import fit_policytree, predict_policytree
