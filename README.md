@@ -1,6 +1,8 @@
 <h1 align="center">Policy Learning with Adaptively Collected Data</h1>
 
-Models for paper _Policy Learning with Adaptively Collected Data_. 
+Models for paper _[Policy Learning with Adaptively Collected Data](https://arxiv.org/abs/2105.02344)_. 
+
+Authors: Ruohan Zhan, Zhimei Ren, Susan Athey, Zhengyuan Zhou.
 
 <p align="center">
   Table of contents </br>
