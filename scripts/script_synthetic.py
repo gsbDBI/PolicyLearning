@@ -1,8 +1,8 @@
 import sys
 from utils.saving import *
 import matplotlib.pyplot as plt
-from utils.policy_tree import fit_policytree, predict_policytree
-from utils.datagen import *
+#from utils.policy_tree import fit_policytree, predict_policytree
+from utils.datagen2 import *
 from utils.experiment import *
 from utils.inference import aw_scores
 from utils.thompson import draw_thompson
@@ -20,7 +20,7 @@ parser.add_argument(
     '-n',
     '--name',
     type=str,
-    default='synthetic',
+    default='exp_revision',
     help='saving name of experiments')
 parser.add_argument(
     '--floor_decay',
@@ -33,6 +33,11 @@ parser.add_argument(
     default=1.0,
     help='signal strength')
 parser.add_argument(
+    '--split',
+    type=float,
+    default=0.5,
+    help='split')
+parser.add_argument(
     '--noise_std',
     type=float,
     default=1.0,
@@ -40,8 +45,13 @@ parser.add_argument(
 parser.add_argument(
     '-B',
     type=float,
-    default=1.5,
-    help='covariate sampling Uniform[-B, B].')
+    default=2.0,
+    help='covariate sampling  Uniform[-B, B].')
+parser.add_argument(
+    '--bias',
+    type=float,
+    default=0.0,
+    help='bias from data-generating process.')
 parser.add_argument(
     '-b',
     '--bandit_model',
@@ -80,10 +90,10 @@ if __name__ == '__main__':
     save_every = 10
 
     # configs
-    K = 2
+    K = 2  
     p = 3
     T = args.T
-    recorded_T = [2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
+    recorded_T = [2000] #, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
     batch_size = 100
     time_explore = 50 * K
     batch_sizes = [time_explore] + [batch_size] * \
@@ -94,8 +104,9 @@ if __name__ == '__main__':
     """ Generate test data """
     T_test = 100000
     noise_std = 1.0
+    bias = args.bias
     data_test, _ = one_dim_data(
-        T=T_test, K=K, p=p, B=args.B, noise_std=args.noise_std, signal=args.signal)
+        T=T_test, K=K, p=p, B=args.B, noise_std=args.noise_std, signal=args.signal, bias=bias)
 
     """ Run and analyze the experiment """
     regret = []
@@ -103,7 +114,7 @@ if __name__ == '__main__':
         """ Data generation """
         # Collect data from environment
         data_exp, mus = one_dim_data(
-            T=T, K=K, p=p, B=args.B, noise_std=args.noise_std, signal=args.signal)
+            T=T, K=K, p=p, B=args.B, noise_std=args.noise_std, signal=args.signal, bias=bias)
         xs, ys = data_exp['xs'], data_exp['ys']
 
         # Run the experiment on the simulated data
@@ -115,10 +126,12 @@ if __name__ == '__main__':
         balwts = 1 / collect(collect3(probs), ws)
         gammahat = aw_scores(yobs=yobs, ws=ws, balwts=balwts,
                              K=K, muhat=muhat)
+        gammahat_ipw = aw_scores(yobs=yobs, ws=ws, balwts=balwts,
+                             K=K, muhat=np.zeros((T, K)))
 
         for TT, recorded_agent in zip(recorded_T, data['recorded_agents']):
             # Estimate muhat and gammahat
-            def learn_policy(weighting):
+            def learn_policy(weighting, gammahat):
                 if weighting == 'uniform':
                     policy = fit_policytree(xs[:TT], gammahat[:TT])
                     w_test = predict_policytree(
@@ -135,27 +148,31 @@ if __name__ == '__main__':
                     data_test['muxs'][np.arange(T_test), list(w_test)])
                 return policy_value, w_test
 
-            policy_value_uniform, arm_uniform = learn_policy('uniform')
-            beta_rate = [0.5, 1.0, 2.0]
+            policy_value_uniform, _ = learn_policy('uniform', gammahat)
+            policy_value_uniform_ipw, _ = learn_policy('uniform', gammahat_ipw)
+            beta_rate = [0.5, 1.0, 1.2, 1.3, 1.5,  2.0]
             policy_regret_beta = []
-            policy_value = args.B ** 2 / 3 - 1 + 4 / (3 * args.B)
+            policy_value = args.B ** 2 / 3 - 1 + 4  / (3 * args.B) * args.signal + bias
             for b_rate in beta_rate:
-                p_v, _ = learn_policy(f'alpha_{b_rate}')
-                policy_regret_beta.append(policy_value * args.signal-p_v)
+                p_v, _ = learn_policy(f'alpha_{b_rate}', gammahat)
+                p_v_ipw, _ = learn_policy(f'alpha_{b_rate}', gammahat_ipw)
+                policy_regret_beta.append(policy_value - p_v)
+                policy_regret_beta.append(policy_value - p_v_ipw)
 
-            # calculate agent out_of_sample regret
-            w_agent, _ = draw_thompson(data_test['xs'], recorded_agent,
-                                       0, T_test, 0, floor=0)
-            policy_value_agent = np.mean(
-                data_test['muxs'][np.arange(T_test), w_agent])
-
-            # record results
+            ## calculate agent out_of_sample regret
+            w_agent, _ = draw_thompson(data_test['xs'], recorded_agent, 
+                    0, T_test, 0, floor=0)
+            policy_value_agent = np.mean(data_test['muxs'][np.arange(T_test), w_agent])
+            
+            
+            ## record results
             regret.append([TT, args.B,
                            args.signal, args.floor_decay,
-                           args.policy_class,
-                           args.signal * policy_value - policy_value_uniform,
+                           args.policy_class, args.bias, 
+                           policy_value  - policy_value_uniform,
+                           policy_value - policy_value_uniform_ipw,
                            *policy_regret_beta,
-                           args.signal*policy_value-policy_value_agent])
+                           policy_value-policy_value_agent])
 
         if (s+1) % save_every == 0 or ((s+1) == num_sims):
             if on_sherlock():
@@ -165,8 +182,9 @@ if __name__ == '__main__':
             if not os.path.isdir(experiment_dir):
                 os.makedirs(experiment_dir)
 
-            filename = compose_filename(args.name, 'npy')
+            filename = compose_filename(f'{args.name}', 'npy')
             write_path = os.path.join(experiment_dir, filename)
             np.save(write_path, regret)
+            # print(np.mean(regret, axis=0), np.std(regret, axis=0))
             regret = []
     print(f'Running time {time() - t1}s')
