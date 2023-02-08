@@ -2,7 +2,7 @@ import sys
 from utils.saving import *
 import matplotlib.pyplot as plt
 #from utils.policy_tree import fit_policytree, predict_policytree
-from utils.datagen2 import *
+from utils.datagen import *
 from utils.experiment import *
 from utils.inference import aw_scores
 from utils.thompson import draw_thompson
