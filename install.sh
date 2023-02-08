@@ -2,4 +2,5 @@
 python setup.py develop
 conda install -c conda-forge rpy2
 conda install -c conda-forge r-devtools r-grf r-bh
-Rscript -e 'install.packages("policytree", repos = "http://cran.us.r-project.org")'
+Rscript -e 'install.packages("policytree")'
+
