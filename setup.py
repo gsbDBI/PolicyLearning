@@ -32,6 +32,8 @@ setup(name='policy_learning',
           "seaborn",
           "sklearn",
           "openml",
+          "zipp",
+          "matplotlib",
       ],
       classifiers=[
           'Development Status :: 1 - Planning',
