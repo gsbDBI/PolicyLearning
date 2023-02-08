@@ -22,6 +22,7 @@ parser.add_argument(
     default='classification',
     help='saving name of experiments')
 parser.add_argument(
+    '-f',
     '--file_name',
     type=str,
     default='volcanoes-b3',
