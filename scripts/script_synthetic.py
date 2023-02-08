@@ -50,7 +50,7 @@ parser.add_argument(
 parser.add_argument(
     '--bias',
     type=float,
-    default=0.0,
+    default=1.0,
     help='bias from data-generating process.')
 parser.add_argument(
     '-b',
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     K = 2  
     p = 3
     T = args.T
-    recorded_T = [2000] #, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
+    recorded_T = [2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
     batch_size = 100
     time_explore = 50 * K
     batch_sizes = [time_explore] + [batch_size] * \

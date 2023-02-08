@@ -64,7 +64,8 @@ def simple_tree_data(T, K=4, p=3, noise_std=1.0, signal=1.0, split=1.676, seed=N
 
     return data, mus
 
-def one_dim_data(T, K=2, p=3, B=2.0, noise_std=1.0, signal=1.0, seed=None, bias=0.): 
+def one_dim_data(T, K=2, p=3, B=2.0, noise_std=1.0, signal=1.0, seed=None,
+                 bias=1.0): 
     """
     """
     assert p >= 1
