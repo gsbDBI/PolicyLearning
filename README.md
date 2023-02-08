@@ -32,8 +32,8 @@ R and Python are required. We recommend creating the following conda environment
 conda create --name policy_learning python=3.8
 conda activate policy_learning
 source install.sh
-Rscript -e 'install.packages("policytree", repos = "http://cran.us.r-project.org")'
 ```
+Then in the R, make sure `grf`, `BH`, `policytree` are installed successfully.
 
 # Quickstart with model
 
