@@ -34,12 +34,13 @@ from utils.ridge import *
 K = 2 # Number of arms
 p = 3 # Number of features
 T = 20000 # Sample size
-B = 1.5 # Covariates are sampled uniformly from [-B, B]^p
+B = 2 # Covariates are sampled uniformly from [-B, B]^p
+bias = 1.0 # Outcomes are shifted by this quantity to have non-zero mean.
 batch_sizes = [100] * 200 # Batch sizes
 
 # Collect data from environment
 data_exp, mus = one_dim_data(
-       T=T, K=K, p=p, B=B, noise_std=1.0, signal=1.0)
+       T=T, K=K, p=p, B=B, noise_std=1.0, signal=1.0, bias=bias)
 xs, ys = data_exp['xs'], data_exp['ys']
 data = run_experiment(xs, ys, floor_start=1/K, floor_decay=0.5,
                               bandit_model='TSModel', batch_sizes=batch_sizes,
@@ -56,10 +57,10 @@ gammahat = aw_scores(yobs=yobs, ws=ws, balwts=1 / collect(collect3(probs), ws),
 policy = fit_policytree(xs, gammahat)
 # simulate standalone test data
 data_test, _ = one_dim_data(
-        T=T_test, K=K, p=p, B=B, noise_std=1.0, signal=1.0)
+        T=T_test, K=K, p=p, B=B, noise_std=1.0, signal=1.0, bias=bias)
 w_test = predict_policytree(policy, data_test['xs'])
 policy_value = np.mean(data_test['muxs'][np.arange(T_test), list(w_test)])
-optimal_policy_value = B ** 2 / 3 - 1 + 4 / (3 * B)
+optimal_policy_value = B ** 2 / 3 - 1 + 4 / (3 * B) + bias
 print(f"Regret is {optimal_policy_value-policy_value}").
 ```
 
