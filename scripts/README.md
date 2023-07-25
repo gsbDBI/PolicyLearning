@@ -56,6 +56,7 @@ gammahat = aw_scores(yobs=yobs, ws=ws, balwts=1 / collect(collect3(probs), ws),
                      K=K, muhat=muhat)
 policy = fit_policytree(xs, gammahat)
 # simulate standalone test data
+T_test = 50000 # Test sample size
 data_test, _ = one_dim_data(
         T=T_test, K=K, p=p, B=B, noise_std=1.0, signal=1.0, bias=bias)
 w_test = predict_policytree(policy, data_test['xs'])
